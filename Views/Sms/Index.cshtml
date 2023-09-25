@@ -1,0 +1,42 @@
+﻿
+
+@model Twilio_4_project.Models.SmsModel
+
+<form id="smsForm">
+    @Html.LabelFor(model => model.PhoneNumbers)
+    @Html.TextBoxFor(model => model.PhoneNumbers, new { placeholder = "Enter phone numbers separated by commas" })
+    <br />
+    @Html.LabelFor(model => model.Message)
+    @Html.TextAreaFor(model => model.Message)
+    <br />
+    <input type="submit" value="Send SMS" />
+</form>
+
+<div id="message"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#smsForm").submit(function (e) {
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/Sms/SendSms",
+                data: formData,
+                success: function (result) {
+                    if (result.success) {
+                        $("#message").text(result.message);
+                    } else {
+                        $("#message").text("Sms Not Sent");
+                    }
+                },
+                error: function () {
+                    $("#message").text("Sms not sent");
+                }
+            });
+        });
+    });
+</script>
